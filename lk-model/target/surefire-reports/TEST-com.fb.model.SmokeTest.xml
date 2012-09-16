@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<testsuite failures="0" time="0.018" errors="0" skipped="0" tests="1" name="com.fb.model.SmokeTest">
+<testsuite failures="0" time="0.028" errors="0" skipped="0" tests="1" name="com.fb.model.SmokeTest">
   <properties>
     <property name="java.runtime.name" value="Java(TM) SE Runtime Environment"/>
     <property name="sun.boot.library.path" value="c:\Program Files\Java\jdk1.6.0_25\jre\bin"/>
@@ -25,7 +25,7 @@
     <property name="java.vm.specification.vendor" value="Sun Microsystems Inc."/>
     <property name="user.variant" value=""/>
     <property name="os.name" value="Windows 7"/>
-    <property name="classworlds.conf" value="d:\Run\apache-maven-3.0.4\bin\..\bin\m2.conf"/>
+    <property name="classworlds.conf" value="D:\Run\apache-maven-3.0.4\bin\..\bin\m2.conf"/>
     <property name="sun.jnu.encoding" value="Cp1252"/>
     <property name="java.library.path" value="c:\Program Files\Java\jdk1.6.0_25\bin;.;C:\Windows\Sun\Java\bin;C:\Windows\system32;C:\Windows;C:\Ruby193\bin;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0\;c:\Program Files\WIDCOMM\Bluetooth Software\;C:\Program Files\Broadcom\Broadcom 802.11\Driver;C:\Program Files\ATI Technologies\ATI.ACE\Core-Static;C:\Program Files\Heroku\bin;C:\Program Files\ruby-1.9.3\bin;C:\Program Files\git\bin;C:\Program Files\git\cmd;C:\Program Files\Git\cmd;C:\Program Files\Git\bin;C:\Program Files\Calibre2\;d:\Run\apache-maven-3.0.4\bin;DemoFly;C:\Program Files\nodejs\;c:\Program Files\apache-ant-1.8.4\bin;C:\Users\Flo\AppData\Roaming\npm\"/>
     <property name="java.specification.name" value="Java Platform API Specification"/>
@@ -38,7 +38,7 @@
     <property name="file.encoding" value="Cp1252"/>
     <property name="java.specification.version" value="1.6"/>
     <property name="user.name" value="Flo"/>
-    <property name="java.class.path" value="d:\Run\apache-maven-3.0.4\bin\..\boot\plexus-classworlds-2.4.jar"/>
+    <property name="java.class.path" value="D:\Run\apache-maven-3.0.4\bin\..\boot\plexus-classworlds-2.4.jar"/>
     <property name="java.vm.specification.version" value="1.0"/>
     <property name="sun.arch.data.model" value="32"/>
     <property name="java.home" value="c:\Program Files\Java\jdk1.6.0_25\jre"/>
@@ -51,7 +51,7 @@
     <property name="java.ext.dirs" value="c:\Program Files\Java\jdk1.6.0_25\jre\lib\ext;C:\Windows\Sun\Java\lib\ext"/>
     <property name="sun.boot.class.path" value="c:\Program Files\Java\jdk1.6.0_25\jre\lib\resources.jar;c:\Program Files\Java\jdk1.6.0_25\jre\lib\rt.jar;c:\Program Files\Java\jdk1.6.0_25\jre\lib\sunrsasign.jar;c:\Program Files\Java\jdk1.6.0_25\jre\lib\jsse.jar;c:\Program Files\Java\jdk1.6.0_25\jre\lib\jce.jar;c:\Program Files\Java\jdk1.6.0_25\jre\lib\charsets.jar;c:\Program Files\Java\jdk1.6.0_25\jre\lib\modules\jdk.boot.jar;c:\Program Files\Java\jdk1.6.0_25\jre\classes"/>
     <property name="java.vendor" value="Sun Microsystems Inc."/>
-    <property name="maven.home" value="d:\Run\apache-maven-3.0.4\bin\.."/>
+    <property name="maven.home" value="D:\Run\apache-maven-3.0.4\bin\.."/>
     <property name="file.separator" value="\"/>
     <property name="java.vendor.url.bug" value="http://java.sun.com/cgi-bin/bugreport.cgi"/>
     <property name="sun.cpu.endian" value="little"/>
@@ -59,5 +59,5 @@
     <property name="sun.desktop" value="windows"/>
     <property name="sun.cpu.isalist" value=""/>
   </properties>
-  <testcase time="0.013" classname="com.fb.model.SmokeTest" name="testSmoke"/>
+  <testcase time="0.01" classname="com.fb.model.SmokeTest" name="testSmoke"/>
 </testsuite>

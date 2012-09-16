@@ -33,7 +33,6 @@ public class RoomsEntryPointTest {
 			System.out.println("[" + userId + "]" + "TO CLIENT SERVER MSG:" + message);
 			if (message instanceof GameCreated) {
 			    gameId.set(((GameCreated) message).getGameId());
-			    latch.countDown();
 			}
 
 		    }
@@ -80,13 +79,12 @@ public class RoomsEntryPointTest {
 		});
 
 	client1.sendClientMessage(new CreateGame(userId, "new game"));
-	latch.await();
+
 	client1.sendClientMessage(new JoinGame(userId, gameId.get()));
 	client2.sendClientMessage(new JoinGame(userId2, gameId.get()));
 	client3.sendClientMessage(new JoinGame(userId3, gameId.get()));
-	client1.sendClientMessage(new UnjoinGame(userId, gameId.get()));
-	client1.sendClientMessage(new StartGame(userId, gameId.get()));
+	client2.sendClientMessage(new CreateGame(userId2, "new game2"));
 	client3.sendClientMessage(new JoinGame(userId3, gameId.get()));
-
+	latch.await();
     }
 }

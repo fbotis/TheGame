@@ -4,8 +4,10 @@
 	<classpathentry kind="src" path="gen"/>
 	<classpathentry kind="con" path="com.android.ide.eclipse.adt.ANDROID_FRAMEWORK"/>
 	<classpathentry kind="con" path="com.android.ide.eclipse.adt.LIBRARIES"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/lk-model"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/lk-transport"/>
-	<classpathentry kind="lib" path="assets/wmqtt.jar"/>
+	<classpathentry kind="lib" path="libs/lk-model-1.0-SNAPSHOT.jar"/>
+	<classpathentry kind="lib" path="libs/lk-transport-1.0-SNAPSHOT.jar"/>
+	<classpathentry kind="lib" path="libs/gson-2.2.2.jar"/>
+	<classpathentry kind="lib" path="libs/log4j-1.2.17.jar"/>
+	<classpathentry kind="lib" path="libs/mqtt3-1.0.jar"/>
 	<classpathentry kind="output" path="bin/classes"/>
 </classpath>
