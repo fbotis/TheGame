@@ -85,6 +85,6 @@ public class RoomsEntryPointTest {
 	client3.sendClientMessage(new JoinGame(userId3, gameId.get()));
 	client2.sendClientMessage(new CreateGame(userId2, "new game2"));
 	client3.sendClientMessage(new JoinGame(userId3, gameId.get()));
-	latch.await();
+	Thread.sleep(100000000000000l);
     }
 }

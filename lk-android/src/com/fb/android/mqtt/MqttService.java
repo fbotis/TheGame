@@ -2,6 +2,9 @@ package com.fb.android.mqtt;
 
 import java.lang.ref.WeakReference;
 
+import org.eclipse.paho.client.mqttv3.MqttException;
+import org.eclipse.paho.client.mqttv3.MqttSecurityException;
+
 import android.app.Service;
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -10,7 +13,6 @@ import android.os.IBinder;
 import android.widget.Toast;
 
 import com.fb.messages.ClientBaseMessage;
-import com.fb.messages.ServerBaseMessage;
 import com.fb.messages.client.ClientDisconnected;
 import com.fb.topics.Topic;
 import com.fb.transport.IMessageHandler;
@@ -39,6 +41,18 @@ public class MqttService extends Service {
 
 	@Override
 	protected Boolean doInBackground(ClientBaseMessage... params) {
+	    // TODO fix this
+	    if (params.length > 0) {
+		try {
+		    mqttTransport.subscribeToTopic(params[0].getUserId());
+		} catch (MqttSecurityException e) {
+		    // TODO Auto-generated catch block
+		    e.printStackTrace();
+		} catch (MqttException e) {
+		    // TODO Auto-generated catch block
+		    e.printStackTrace();
+		}
+	    }
 	    for (ClientBaseMessage msg : params) {
 		mqttTransport.sendClientMessage(msg);
 		// TODO exceptions from sendClient?

@@ -1,78 +1,92 @@
 package com.fb.android;
 
-import android.app.Activity;
-import android.content.ComponentName;
-import android.content.Context;
+import java.util.ArrayList;
+
 import android.content.Intent;
-import android.content.ServiceConnection;
 import android.os.Bundle;
-import android.os.IBinder;
-import android.util.Log;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemLongClickListener;
+import android.widget.ArrayAdapter;
 import android.widget.Toast;
 
-import com.fb.android.mqtt.MqttService;
-import com.fb.android.mqtt.MqttService.LocalBinder;
-import com.fb.messages.ClientBaseMessage;
-import com.fb.messages.ServerBaseMessage;
+import com.fb.android.views.BaseActivity;
+import com.fb.android.views.GameView;
 import com.fb.messages.client.general.GetSnapshot;
 import com.fb.messages.client.room.CreateGame;
+import com.fb.messages.client.room.JoinGame;
+import com.fb.messages.server.ErrorMessage;
+import com.fb.messages.server.general.Snapshot;
+import com.fb.messages.server.general.Snapshot.Room;
+import com.fb.messages.server.room.GameCreated;
+import com.fb.messages.server.room.GameStarted;
+import com.fb.messages.server.room.UserJoinedGame;
+import com.fb.messages.server.room.UserUnjoinedGame;
 import com.fb.transport.IMessageHandler;
 
-public class LKActivity extends Activity implements IMessageHandler {
-    /** Called when the activity is first created. */
+public class LKActivity extends BaseActivity implements IMessageHandler, OnItemLongClickListener {
+
+    // LIST OF ARRAY STRINGS WHICH WILL SERVE AS LIST ITEMS
+    ArrayList<String> listItems = new ArrayList<String>();
+
+    // DEFINING STRING ADAPTER WHICH WILL HANDLE DATA OF LISTVIEW
+    ArrayAdapter<String> adapter;
+
+    // METHOD WHICH WILL HANDLE DYNAMIC INSERTION
+    public void createRoom(View v) {
+	sendClientMessage(new CreateGame(getClientId(), "Game" + System.currentTimeMillis()));
+    }
+
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) {
 	super.onCreate(savedInstanceState);
-	setContentView(R.layout.main);
-	getApplicationContext().bindService(new Intent(this, MqttService.class), mConnection, Context.BIND_AUTO_CREATE);
+	setContentView(R.layout.rooms);
+	adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, listItems);
+	setListAdapter(adapter);
+	getListView().setOnItemLongClickListener(this);
+	sendClientMessage(new GetSnapshot(getClientId()));
     }
 
-    /** Defines callbacks for service binding, passed to bindService() */
-    private ServiceConnection mConnection = new ServiceConnection() {
-
-	private MqttService mService;
-	private boolean mBound;
-
-	@Override
-	public void onServiceConnected(ComponentName className, IBinder service) {
-	    // We've bound to LocalService, cast the IBinder and get
-	    // LocalService instance
-	    LocalBinder binder = (LocalBinder) service;
-	    mService = (MqttService) binder.getService();
-	    mService.setMsgHandler(LKActivity.this);
-	    mService.sendMessage(new GetSnapshot(mService.getClientId()));
-	    mBound = true;
+    public void handleSnapshot(Snapshot msg) {
+	for (Room r : ((Snapshot) msg).getRooms()) {
+	    listItems.add(r.getRoomId());
 	}
-
-	@Override
-	public void onServiceDisconnected(ComponentName arg0) {
-	    mBound = false;
-	}
-    };
-
-    @Override
-    public void handleClientMessage(final ClientBaseMessage arg0) {
-	this.runOnUiThread(new Runnable() {
-
-	    @Override
-	    public void run() {
-		Toast.makeText(getApplicationContext(), arg0.toString(), Toast.LENGTH_LONG).show();
-		Log.d("t", arg0.toString());
-	    }
-	});
-
+	adapter.notifyDataSetChanged();
     }
 
     @Override
-    public void handleServerMessage(final ServerBaseMessage arg0) {
-	this.runOnUiThread(new Runnable() {
+    protected void handleNewGame(GameCreated msg) {
+	listItems.add(msg.getGameId());
+	adapter.notifyDataSetChanged();
+    }
 
-	    @Override
-	    public void run() {
-		Toast.makeText(getApplicationContext(), arg0.toString(), Toast.LENGTH_LONG).show();
-		Log.d("t", arg0.toString());
-	    }
-	});
+    @Override
+    protected void handleUserJoinedGame(UserJoinedGame msg) {
+	if (msg.getJoinedUserId().equals(getClientId())) {
+	    Toast.makeText(getApplicationContext(), "You joined game " + msg.getJoinedGameId(), Toast.LENGTH_LONG)
+		    .show();
+	    Intent intent = new Intent(this, GameView.class);
+	    startActivity(intent);
+	}
+    }
 
+    @Override
+    protected void handleGameStarted(GameStarted msg) {
+	// TODO Auto-generated method stub
+	super.handleGameStarted(msg);
+    }
+
+    @Override
+    protected void handlerErrorMessage(ErrorMessage msg) {
+    }
+
+    @Override
+    protected void handlerUserUserUnjoinedGame(UserUnjoinedGame msg) {
+    }
+
+    @Override
+    public boolean onItemLongClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
+	sendClientMessage(new JoinGame(getClientId(), listItems.get(arg2)));
+	return true;
     }
 }

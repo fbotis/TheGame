@@ -6,7 +6,7 @@ import com.fb.messages.ServerBaseMessage;
 
 public class Snapshot extends ServerBaseMessage {
 
-    public static class Room {
+    public static  class Room {
 	private String name;
 	private String roomId;
 	private List<String> players;

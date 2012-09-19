@@ -13,7 +13,7 @@
 	<classpathentry kind="var" path="M2_REPO/dom4j/dom4j/1.6.1/dom4j-1.6.1.jar"/>
 	<classpathentry kind="var" path="M2_REPO/xml-apis/xml-apis/1.0.b2/xml-apis-1.0.b2.jar"/>
 	<classpathentry kind="var" path="M2_REPO/com/google/code/gson/gson/2.2.2/gson-2.2.2.jar" sourcepath="M2_REPO/com/google/code/gson/gson/2.2.2/gson-2.2.2-sources.jar"/>
-	<classpathentry kind="var" path="M2_REPO/org/eclipse/paho/mqtt3/1.0/mqtt3-1.0.jar"/>
+	<classpathentry kind="var" path="M2_REPO/org/eclipse/paho/mqtt3/1.0/mqtt3-1.0.jar" sourcepath="/mqtt_src"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/lk-model"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/lk-rooms"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/lk-transport"/>
