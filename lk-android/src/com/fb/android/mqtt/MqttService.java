@@ -103,4 +103,25 @@ public class MqttService extends Service {
 	new AsyncSendMessage().execute(msg);
     }
 
+    public void subscribeToTopic(String topic) {
+	try {
+	    mqttTransport.subscribeToTopic(topic);
+	} catch (MqttSecurityException e) {
+	    // TODO Auto-generated catch block
+	    e.printStackTrace();
+	} catch (MqttException e) {
+	    // TODO Auto-generated catch block
+	    e.printStackTrace();
+	}
+    }
+
+    public void unsubscribeFromTopic(String topic) {
+	try {
+	    mqttTransport.unsubscribeFromTopic(topic);
+	} catch (MqttException e) {
+	    // TODO Auto-generated catch block
+	    e.printStackTrace();
+	}
+    }
+
 }

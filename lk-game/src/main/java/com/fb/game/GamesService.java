@@ -27,8 +27,9 @@ public class GamesService implements IMessageHandler {
 
     public GamesService(IServerMessageSender srvSender) {
 	this.srvSender = srvSender;
-	cmdFactory = new CommandFactory(gamesManager, srvSender);
 	gamesManager = new GamesManager();
+	cmdFactory = new CommandFactory(gamesManager, srvSender);
+	
     }
 
     @Override
@@ -50,6 +51,12 @@ public class GamesService implements IMessageHandler {
     public void handleServerMessage(ServerBaseMessage message) {
 	if (message instanceof NewGame) {
 	    GameLogic logic = gamesManager.createNewGame((NewGame) message);
+	    try {
+		srvSender.subscribeToTopic(((NewGame) message).getRoomId());
+	    } catch (Exception e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	    }
 	    srvSender.sendServerMessage(new BeginChooseTerritory(((NewGame) message).getRoomId(), logic.nextPlayer()));
 	}
     }

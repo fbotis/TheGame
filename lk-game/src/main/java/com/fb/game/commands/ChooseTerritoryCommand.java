@@ -14,6 +14,7 @@ public class ChooseTerritoryCommand extends Command<ChooseTerritory> {
 
     @Override
     public void doWork() throws Exception {
+	//TODO if all terrytories choosen start challenges
 	TerritoryChosen terrChosen = getGameLogic().handleChooseTerritory(getMessage());
 	sendServerMessage(terrChosen);
     }

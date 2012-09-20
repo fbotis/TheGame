@@ -5,14 +5,14 @@
     android:orientation="vertical" >
 
     <Button
-        android:id="@+id/createRoom"
+        android:id="@+id/createRoomBtn"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:onClick="createRoom"
         android:text="Create room" />
 
-    <ListView
-        android:id="@android:id/list"
+    <ExpandableListView
+        android:id="@+id/rooms_list"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:drawSelectorOnTop="false" />

@@ -1,12 +1,17 @@
 package com.fb.messages.server.general;
 
+import java.io.Serializable;
 import java.util.List;
 
 import com.fb.messages.ServerBaseMessage;
 
 public class Snapshot extends ServerBaseMessage {
 
-    public static  class Room {
+    public static class Room implements Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -6496857422532242133L;
 	private String name;
 	private String roomId;
 	private List<String> players;

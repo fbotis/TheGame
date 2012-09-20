@@ -37,6 +37,7 @@ public class LKApplication extends Application implements IMessageHandler {
 	    mService.setMsgHandler(LKApplication.this);
 	    mBound = true;
 	    sendPendingMessages();
+	    subscribeToPendingTopics();
 	    Log.d(logTag, "Service bound!");
 	}
 
@@ -49,12 +50,20 @@ public class LKApplication extends Application implements IMessageHandler {
     private Set<IMessageHandler> handlers = new HashSet<IMessageHandler>();
     private LinkedList<ServerBaseMessage> unconsumedMessages = new LinkedList<ServerBaseMessage>();
     private LinkedList<ClientBaseMessage> pendingMessages = new LinkedList<ClientBaseMessage>();
+    private LinkedList<String> pendingTopics = new LinkedList<String>();
 
     private void sendPendingMessages() {
 	Iterator<ClientBaseMessage> pendingIt = pendingMessages.iterator();
 	while (pendingIt.hasNext()) {
 	    this.mService.sendMessage(pendingIt.next());
 	}
+    }
+
+    protected void subscribeToPendingTopics() {
+	for (String t : pendingTopics) {
+	    mService.subscribeToTopic(t);
+	}
+
     }
 
     @Override
@@ -111,4 +120,26 @@ public class LKApplication extends Application implements IMessageHandler {
 	    pendingMessages.add(msg);
 	}
     }
+
+    // TODO modify this
+    private static volatile String clientID = "mobile" + System.nanoTime();;
+
+    public String getClientId() {
+	return clientID;
+    }
+
+    public void subscribeToTopic(String topic) {
+	if (mService != null) {
+	    mService.subscribeToTopic(topic);
+	} else {
+	    pendingTopics.add(topic);
+	}
+    }
+
+    public void unsubscribeFromTopic(String topic) {
+	if (mService != null) {
+	    mService.unsubscribeFromTopic(topic);
+	}
+    }
+
 }

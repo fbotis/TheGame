@@ -89,16 +89,15 @@ public class GameEntryPointTest {
 	client1.sendClientMessage(new CreateGame(userId, "new game"));
 	latch.await();
 
+	CountDownLatch latch2=new CountDownLatch(10);
 	client1.sendClientMessage(new JoinGame(userId, gameId.get()));
 	client1.subscribeToTopic("S" + gameId.get());
 	client2.sendClientMessage(new JoinGame(userId2, gameId.get()));
 	client2.subscribeToTopic("S" + gameId.get());
 	client3.sendClientMessage(new JoinGame(userId3, gameId.get()));
 	client3.subscribeToTopic("S" + gameId.get());
-	Thread.sleep(500);
-	client1.sendClientMessage(new StartGame(userId, gameId.get()));
 
-	Thread.sleep(1000000);
+	latch2.await();
 
     }
 }
