@@ -6,9 +6,8 @@ import org.apache.log4j.Logger;
 import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttSecurityException;
 
-import com.fb.bot.robot.Bot;
-import com.fb.bot.robot.cmds.Command;
-import com.fb.bot.robot.cmds.CommandFactory;
+import com.fb.bot.cmds.Command;
+import com.fb.bot.cmds.CommandFactory;
 import com.fb.messages.BaseMessage;
 import com.fb.messages.ClientBaseMessage;
 import com.fb.messages.ServerBaseMessage;
