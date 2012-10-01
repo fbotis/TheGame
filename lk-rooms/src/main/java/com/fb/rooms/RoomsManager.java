@@ -21,16 +21,18 @@ public class RoomsManager {
     private Map<String, Room> roomsByCreatorId = new ConcurrentHashMap<String, Room>();
     private Map<String, Room> roomsByRoomId = new ConcurrentHashMap<String, Room>();
 
-    public Room createRoom(CreateGame createGame) throws DuplicateRoomException, UserAlreadyCreatedGameException {
-	if (roomsByName.get(createGame.getGameName()) != null) {
-	    throw new DuplicateRoomException(createGame);
+    public Room createRoom(CreateGame createGame) throws UserAlreadyCreatedGameException {
+	String roomName = createGame.getGameName();
+	if (roomsByName.get(roomName) != null) {
+	    // TODO change this to user name instead of user id
+	    roomName += createGame.getUserId();
 	}
 
 	if (roomsByCreatorId.get(createGame.getUserId()) != null) {
 	    throw new UserAlreadyCreatedGameException(createGame);
 	}
 
-	Room room = new Room(createGame.getUserId(), createGame.getGameName());
+	Room room = new Room(createGame.getUserId(), roomName);
 	putRoom(room);
 
 	return room;
@@ -78,8 +80,10 @@ public class RoomsManager {
 	if ((room = roomsByRoomId.get(gameId)) == null) {
 	    throw new RoomNotFoundException(startGame);
 	}
-
-	return removeRoom(room);
+	
+	room=removeRoom(room);
+	room.initializeMap();
+	return room;
     }
 
     public Map<String, Room> getAllRoomsByRoomId() {
@@ -100,6 +104,7 @@ public class RoomsManager {
 
     public void userDisconnected(ClientDisconnected clientDisconnectedMsg) throws RoomNotFoundException,
 	    UserAlreadyUnJoinedException {
+	// TODO is ok this?it;s enough?
 	for (Room r : roomsByCreatorId.values()) {
 	    if (r.getUsers().contains(clientDisconnectedMsg.getClientId())) {
 		unjoinRoom(new UnjoinGame(clientDisconnectedMsg.getClientId(), r.getId()));

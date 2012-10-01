@@ -20,8 +20,7 @@ public class StartGameCommand extends Command<StartGame> {
 	Room room = getRoomsManager().startRoom(getMessage());
 	// TODO the newGame message should arrive on the game engine before
 	// gameStarted to the user
-	sendServerMessage(new NewGame(room.getId(), room.getCreatorId(), room.getUsers(), room.getName()));
-	sendServerMessage(new GameStarted(getMessage().getGameId()));
+	sendServerMessage(new NewGame(room.getId(), room.getCreatorId(), room.getUsers(), room.getName(), room.getMap()));
+	sendServerMessage(new GameStarted(getMessage().getGameId(), room.getMap()));
     }
-
 }

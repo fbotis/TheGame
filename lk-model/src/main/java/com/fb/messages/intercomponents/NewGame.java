@@ -10,13 +10,15 @@ public class NewGame extends ServerBaseMessage {
     private String roomCreatorId;
     private List<String> roomUsers;
     private String roomName;
+    private List<String> map;
 
-    public NewGame(String roomId, String roomCreatorId, List<String> roomUsers, String roomName) {
+    public NewGame(String roomId, String roomCreatorId, List<String> roomUsers, String roomName, List<String> map) {
 	addTopic(Topic.INTER_COMPONENT_GAME_ENGINE);
 	this.roomId = roomId;
 	this.roomCreatorId = roomCreatorId;
 	this.roomUsers = roomUsers;
 	this.roomName = roomName;
+	this.map = map;
     }
 
     public String getRoomId() {
@@ -35,4 +37,7 @@ public class NewGame extends ServerBaseMessage {
 	return roomName;
     }
 
+    public List<String> getMap() {
+	return map;
+    }
 }

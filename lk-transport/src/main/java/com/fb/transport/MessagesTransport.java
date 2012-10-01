@@ -33,6 +33,7 @@ public class MessagesTransport implements IServerMessageSender, IClientMessageSe
     };
     private AtomicLong queueCount = new AtomicLong();
 
+    
     public MessagesTransport(String clientId, String brokerUrl, String clientDisconnectedTopic,
 	    BaseMessage clientDisconnectedMessage, String[] subscribedTopics, IMessageHandler msgHandler) {
 	try {

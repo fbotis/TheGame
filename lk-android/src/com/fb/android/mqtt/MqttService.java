@@ -12,6 +12,7 @@ import android.os.Binder;
 import android.os.IBinder;
 import android.widget.Toast;
 
+import com.fb.android.Config;
 import com.fb.messages.ClientBaseMessage;
 import com.fb.messages.client.ClientDisconnected;
 import com.fb.topics.Topic;
@@ -82,7 +83,7 @@ public class MqttService extends Service {
 	// init all
 	String clientId = getClientId();
 
-	mqttTransport = new MessagesTransport(clientId, "tcp://192.168.1.101", Topic.CLIENT_DISCONNECTED,
+	mqttTransport = new MessagesTransport(clientId, Config.INSTANCE.getMQTTBrokerURL(), Topic.CLIENT_DISCONNECTED,
 		new ClientDisconnected(clientId), new String[] { Topic.ALL_TOPIC, clientId });
 	super.onCreate();
     }

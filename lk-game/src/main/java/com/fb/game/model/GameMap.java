@@ -2,6 +2,7 @@ package com.fb.game.model;
 
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -10,9 +11,9 @@ public class GameMap {
 
     private Map<String, String> territoriesIds = new HashMap<String, String>();
 
-    public GameMap(int mapSize) {
-	for (int i = 0; i < mapSize; i++) {
-	    territoriesIds.put(String.valueOf(i), FREE_TERRITORY);
+    public GameMap(List<String> mapIds) {
+	for (String id : mapIds) {
+	    territoriesIds.put(id, FREE_TERRITORY);
 	}
     }
 

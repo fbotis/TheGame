@@ -19,6 +19,7 @@ import android.widget.Toast;
 
 import com.fb.android.R;
 import com.fb.android.views.base.ExpandleListBaseActivity;
+import com.fb.messages.client.general.GetSnapshot;
 import com.fb.messages.client.room.JoinGame;
 import com.fb.messages.server.general.Snapshot;
 import com.fb.messages.server.general.Snapshot.Room;
@@ -40,6 +41,9 @@ public class RoomsListView extends ExpandleListBaseActivity {
 	mAdapter = new RoomsExpandableListAdapter();
 	setListAdapter(mAdapter);
 	registerForContextMenu(getExpandableListView());
+	
+	//TODO is ok here
+	sendClientMessage(new GetSnapshot(getClientId()));
     }
 
     @Override
@@ -85,7 +89,10 @@ public class RoomsListView extends ExpandleListBaseActivity {
 
     @Override
     public void handleUserJoinedGame(UserJoinedGame msg) {
-	roomsById.get(msg.getJoinedGameId()).getPlayers().add(msg.getJoinedUserId());
+	// TODO handle the case when this arrives before snasphost or create
+	// game
+	if (roomsById.get(msg.getJoinedGameId()) != null)
+	    roomsById.get(msg.getJoinedGameId()).getPlayers().add(msg.getJoinedUserId());
 	mAdapter.notifyDataSetChanged();
 	if (getClientId().equals(msg.getJoinedUserId())) {
 	    Intent intent = new Intent(this, PreGameView.class);
@@ -96,12 +103,16 @@ public class RoomsListView extends ExpandleListBaseActivity {
 
     @Override
     public void handlerUserUnjoinedGame(UserUnjoinedGame msg) {
+	// TODO handle the case when this arrives before snasphost or create
+	// game
 	roomsById.get(msg.getUnjoinedGameId()).getPlayers().remove(msg.getUnjoinedUserId());
 	mAdapter.notifyDataSetChanged();
     }
 
     @Override
     public void handleGameStarted(GameStarted msg) {
+	// TODO handle the case when this arrives before snasphost or create
+	// game
 	roomsById.remove(msg.getGameId());
 	mAdapter.notifyDataSetChanged();
     }

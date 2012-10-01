@@ -40,8 +40,8 @@ public class GameLogic {
     // TODO implement this
     private IQuestionService questionService = new SimpleQuestionService();
 
-    public GameLogic(List<String> players, String gameId) {
-	this.map = new GameMap(9);
+    public GameLogic(List<String> players, String gameId, List<String> list) {
+	this.map = new GameMap(list);
 	this.players = players;
 	this.gameId = gameId;
 	nextTurnIt = players.iterator();

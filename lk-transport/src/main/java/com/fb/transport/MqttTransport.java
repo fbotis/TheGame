@@ -29,6 +29,7 @@ public class MqttTransport implements MqttCallback, ITransportService {
     public MqttTransport(String clientId, String brokerUrl, String clientDisconnectedTopic,
 	    BaseMessage clientDisconnectedMessage, ITransportListener transportListener, String[] subscribedTopics)
 	    throws MqttException {
+	//TODO check connection, throw exception if host unavailable
 	this.transportListener = transportListener;
 	this.mqttBrokerUrl = brokerUrl;
 	// CONN OPTIONS

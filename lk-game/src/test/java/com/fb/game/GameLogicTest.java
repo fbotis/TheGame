@@ -33,7 +33,11 @@ public class GameLogicTest {
 	users.add(u2);
 	users.add(u3);
 
-	GameLogic game = new GameLogic(users, gameId);
+	List<String> mapIds = new ArrayList<String>();
+	for (int i = 0; i < 9; i++) {
+	    mapIds.add(String.valueOf(i));
+	}
+	GameLogic game = new GameLogic(users, gameId, mapIds);
 
 	ChooseTerritory u1Ch1 = new ChooseTerritory(u1, gameId, "0");
 	ChooseTerritory u2Ch1 = new ChooseTerritory(u2, gameId, "1");

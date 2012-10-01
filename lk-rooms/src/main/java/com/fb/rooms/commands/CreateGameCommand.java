@@ -1,6 +1,5 @@
 package com.fb.rooms.commands;
 
-import com.fb.exceptions.room.DuplicateRoomException;
 import com.fb.exceptions.room.UserAlreadyCreatedGameException;
 import com.fb.messages.client.room.CreateGame;
 import com.fb.messages.server.room.GameCreated;
@@ -16,7 +15,7 @@ public class CreateGameCommand extends Command<CreateGame> {
     }
 
     @Override
-    public void doWork() throws DuplicateRoomException, UserAlreadyCreatedGameException {
+    public void doWork() throws UserAlreadyCreatedGameException {
 	Room room = getRoomsManager().createRoom(getMessage());
 	sendServerMessage(new GameCreated(room.getName(), room.getId(), room.getCreatorId()));
     }

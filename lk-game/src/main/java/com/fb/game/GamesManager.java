@@ -15,7 +15,7 @@ public class GamesManager {
     }
 
     public GameLogic createNewGame(NewGame newGame) {
-	GameLogic gameLogic = new GameLogic(newGame.getRoomUsers(), newGame.getRoomId());
+	GameLogic gameLogic = new GameLogic(newGame.getRoomUsers(), newGame.getRoomId(), newGame.getMap());
 	currentGames.put(newGame.getRoomId(), gameLogic);
 	return gameLogic;
     }
