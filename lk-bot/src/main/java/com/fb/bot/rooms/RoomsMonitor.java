@@ -57,7 +57,7 @@ public class RoomsMonitor implements Runnable {
 
     @Override
     public synchronized void run() {
-	if (!bot.isJoinSent()) {
+	if (!bot.isJoinSent() && !bot.isPlaying()) {
 	    for (Entry<String, Long> lastUpdateEntry : roomsLastUpdate.entrySet()) {
 		if (System.currentTimeMillis() - lastUpdateEntry.getValue() > JOIN_GAME_TIMEOUT) {
 		    if (rooms.get(lastUpdateEntry.getKey()).getPlayers().size() <= MIN_PLAYERS_FOR_BOT_JOIN) {

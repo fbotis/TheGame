@@ -118,7 +118,7 @@ public class GameLogic {
 	String winner = questionService.computeWinner(crtChallengePlayers);
 	map.assignTerritory(crtChallengedTerritory, winner);
 	// TODO Auto-generated method stub
-	return new ChallengeResult(gameId, crtChallengePlayers.keySet().iterator().next());
+	return new ChallengeResult(gameId, crtChallengePlayers.keySet().iterator().next(), crtChallengedTerritory);
     }
 
     private void checkState(ClientBaseMessage msg, String... possibleStates) throws InvalidStateException {
@@ -132,5 +132,9 @@ public class GameLogic {
 	    nextTurnIt = players.iterator();
 	}
 	return nextTurnIt.next();
+    }
+
+    public boolean isAnyTerritoryFree() {
+	return map.isAnyTerritoryFree();
     }
 }

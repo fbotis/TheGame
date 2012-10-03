@@ -35,15 +35,15 @@ public class RoomsListView extends ExpandleListBaseActivity {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-	super.onCreate(savedInstanceState);
-
 	// Set up our adapter
 	mAdapter = new RoomsExpandableListAdapter();
 	setListAdapter(mAdapter);
 	registerForContextMenu(getExpandableListView());
-	
-	//TODO is ok here
+
+	super.onCreate(savedInstanceState);
+	// TODO is ok here
 	sendClientMessage(new GetSnapshot(getClientId()));
+
     }
 
     @Override

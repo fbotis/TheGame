@@ -19,7 +19,7 @@ import com.fb.transport.MessagesTransport;
 
 public class BotService implements IMessageHandler {
     private static final Logger logger = Logger.getLogger(BotService.class);
-    private static final String[] DEFAULT_SUB_TOPICS = { Topic.ALL_TOPIC, Topic.ROOMS_ENGINE, Topic.CLIENT_DISCONNECTED };
+    private static final String[] DEFAULT_SUB_TOPICS = { Topic.ALL_TOPIC, Topic.CLIENT_DISCONNECTED };
     private MessagesTransport msgTransport;
     private Bot bot;
     private CommandFactory cmdFact;

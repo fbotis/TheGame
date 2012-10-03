@@ -10,12 +10,13 @@ public class BeginChallengeCommand extends Command<BeginChallenge> {
 
     public BeginChallengeCommand(Bot bot, BeginChallenge msg) {
 	super(bot, msg);
-	// TODO Auto-generated constructor stub
     }
 
     @Override
     public Object execute() throws Exception {
-	// TODO Auto-generated method stub
+	if (getMessage().getNextPlayerId().equals(getBot().getClientId())) {
+	    getBot().challengeUser();
+	}
 	return null;
     }
 

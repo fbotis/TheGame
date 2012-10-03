@@ -15,7 +15,9 @@ public class QuestionCommand extends Command<Question> {
 
     @Override
     public Object execute() throws Exception {
-	// TODO Auto-generated method stub
+	if (getBot().isChallenged()) {
+	    getBot().answerQuestion(getMessage().getQuestion());
+	}
 	return null;
     }
 

@@ -6,17 +6,17 @@ import com.fb.bot.cmds.MessageCommand;
 import com.fb.messages.server.gameactions.PlayerChallenged;
 
 @MessageCommand(type = PlayerChallenged.class)
-public class PlayerChallengedCommand extends Command<PlayerChallenged>{
+public class PlayerChallengedCommand extends Command<PlayerChallenged> {
 
     public PlayerChallengedCommand(Bot bot, PlayerChallenged msg) {
 	super(bot, msg);
-	// TODO Auto-generated constructor stub
     }
 
     @Override
     public Object execute() throws Exception {
-	// TODO Auto-generated method stub
+	if (getMessage().getChallengedPlayerId().equals(getBot().getClientId())) {
+	    getBot().ownTerritoryChallenged(getMessage().getTerritoryId(), getMessage().getChallengedPlayerId());
+	}
 	return null;
     }
-
 }

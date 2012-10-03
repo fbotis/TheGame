@@ -19,7 +19,7 @@ public class CommandFactory {
 
     public CommandFactory(Bot bot) {
 	this.bot = bot;
-	Reflections reflections = new Reflections("com.fb.bot.cmds.server.room");
+	Reflections reflections = new Reflections("com.fb.bot.cmds.server.room","com.fb.bot.cmds.server.game");
 	Set<Class<?>> annotated = reflections.getTypesAnnotatedWith(MessageCommand.class);
 	for (Class<?> c : annotated) {
 	    cmdsMap.put(c.getAnnotation(MessageCommand.class).type(), c);
