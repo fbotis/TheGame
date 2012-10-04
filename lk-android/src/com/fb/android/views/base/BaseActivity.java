@@ -21,7 +21,7 @@ import com.fb.messages.server.room.UserUnjoinedGame;
 
 public class BaseActivity extends Activity implements ClientMessagesHandler {
 
-    private AndroidMessageHandler msgHandler;
+    protected AndroidMessageHandler msgHandler;
 
     @Override
     public void onResume() {
@@ -62,27 +62,35 @@ public class BaseActivity extends Activity implements ClientMessagesHandler {
 
     // *************** HANDLERS***************
     public void handleTerritoryChosen(TerritoryChosen msg) {
+	Toast.makeText(getApplicationContext(), msg.toString(), Toast.LENGTH_LONG).show();
     }
 
     public void handleQuestion(Question msg) {
+	Toast.makeText(getApplicationContext(), msg.toString(), Toast.LENGTH_LONG).show();
     }
 
     public void handlePlayerChallenged(PlayerChallenged msg) {
+	Toast.makeText(getApplicationContext(), msg.toString(), Toast.LENGTH_LONG).show();
     }
 
     public void handleEndGame(BeginChallenge msg) {
+	Toast.makeText(getApplicationContext(), msg.toString(), Toast.LENGTH_LONG).show();
     }
 
     public void handleChallengeResult(ChallengeResult msg) {
+	Toast.makeText(getApplicationContext(), msg.toString(), Toast.LENGTH_LONG).show();
     }
 
     public void handleBeginChooseTerritory(BeginChooseTerritory msg) {
+	Toast.makeText(getApplicationContext(), msg.toString(), Toast.LENGTH_LONG).show();
     }
 
     public void handleBeginChallenge(BeginChallenge msg) {
+	Toast.makeText(getApplicationContext(), msg.toString(), Toast.LENGTH_LONG).show();
     }
 
     public void handleUserJoinedGame(UserJoinedGame msg) {
+	Toast.makeText(getApplicationContext(), msg.toString(), Toast.LENGTH_LONG).show();
     }
 
     public void handlerErrorMessage(ErrorMessage msg) {
@@ -90,15 +98,19 @@ public class BaseActivity extends Activity implements ClientMessagesHandler {
     }
 
     public void handlerUserUnjoinedGame(UserUnjoinedGame msg) {
+	Toast.makeText(getApplicationContext(), msg.toString(), Toast.LENGTH_LONG).show();
     }
 
     public void handleGameStarted(GameStarted msg) {
+	Toast.makeText(getApplicationContext(), msg.toString(), Toast.LENGTH_LONG).show();
     }
 
     public void handleNewGame(GameCreated msg) {
+	Toast.makeText(getApplicationContext(), msg.toString(), Toast.LENGTH_LONG).show();
     }
 
     public void handleSnapshot(Snapshot msg) {
+	Toast.makeText(getApplicationContext(), msg.toString(), Toast.LENGTH_LONG).show();
     }
 
 }

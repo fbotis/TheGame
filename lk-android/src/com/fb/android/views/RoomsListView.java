@@ -9,17 +9,20 @@ import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup.LayoutParams;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.Button;
 import android.widget.ExpandableListView;
 import android.widget.ExpandableListView.ExpandableListContextMenuInfo;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.fb.android.R;
 import com.fb.android.views.base.ExpandleListBaseActivity;
 import com.fb.messages.client.general.GetSnapshot;
+import com.fb.messages.client.room.CreateGame;
 import com.fb.messages.client.room.JoinGame;
 import com.fb.messages.server.general.Snapshot;
 import com.fb.messages.server.general.Snapshot.Room;
@@ -75,6 +78,9 @@ public class RoomsListView extends ExpandleListBaseActivity {
 	    mAdapter.addRoom(r);
 	}
 	mAdapter.notifyDataSetChanged();
+
+	// TODO remove this
+	sendClientMessage(new CreateGame(getClientId(), "the game"));
     }
 
     @Override
@@ -85,6 +91,13 @@ public class RoomsListView extends ExpandleListBaseActivity {
 	roomsById.put(msg.getGameId(), room);
 	mAdapter.addRoom(room);
 	mAdapter.notifyDataSetChanged();
+
+	// the case when the game was created by this user
+	if (room.getPlayers().contains(getClientId())) {
+	    Intent intent = new Intent(this, PreGameView.class);
+	    intent.putExtra(PreGameView.ROOM_EXTRA_ID, room);
+	    startActivity(intent);
+	}
     }
 
     @Override
@@ -99,6 +112,7 @@ public class RoomsListView extends ExpandleListBaseActivity {
 	    intent.putExtra(PreGameView.ROOM_EXTRA_ID, roomsById.get(msg.getJoinedGameId()));
 	    startActivity(intent);
 	}
+
     }
 
     @Override

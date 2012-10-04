@@ -10,13 +10,14 @@ import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
 import org.eclipse.paho.client.mqttv3.MqttDeliveryToken;
 import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
+import org.eclipse.paho.client.mqttv3.MqttPersistenceException;
 import org.eclipse.paho.client.mqttv3.MqttSecurityException;
 import org.eclipse.paho.client.mqttv3.MqttTopic;
 import org.eclipse.paho.client.mqttv3.internal.MemoryPersistence;
 
 import com.fb.messages.BaseMessage;
 
-public class MqttTransport implements MqttCallback, ITransportService {
+class MqttTransport implements MqttCallback, ITransportService {
     private static final Logger logger = Logger.getLogger(MqttTransport.class);
 
     private String mqttBrokerUrl;
@@ -29,7 +30,7 @@ public class MqttTransport implements MqttCallback, ITransportService {
     public MqttTransport(String clientId, String brokerUrl, String clientDisconnectedTopic,
 	    BaseMessage clientDisconnectedMessage, ITransportListener transportListener, String[] subscribedTopics)
 	    throws MqttException {
-	//TODO check connection, throw exception if host unavailable
+	// TODO check connection, throw exception if host unavailable
 	this.transportListener = transportListener;
 	this.mqttBrokerUrl = brokerUrl;
 	// CONN OPTIONS
@@ -69,7 +70,8 @@ public class MqttTransport implements MqttCallback, ITransportService {
 	transportListener.messageReceived(topic.getName(), new String(message.getPayload(), "UTF-8"));
     }
 
-    public void sendMessage(String topic, String message) throws Exception {
+    public void sendMessage(String topic, String message) throws MqttPersistenceException,
+	    UnsupportedEncodingException, MqttException {
 	mqttClient.getTopic(topic).publish(message.getBytes("UTF-8"), 2, false);
     }
 
@@ -83,5 +85,9 @@ public class MqttTransport implements MqttCallback, ITransportService {
 
     public void setTransportListener(ITransportListener transportListener) {
 	this.transportListener = transportListener;
+    }
+
+    public boolean isConnected() {
+	return mqttClient.isConnected();
     }
 }

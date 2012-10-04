@@ -83,7 +83,7 @@ public class LKApplication extends Application implements IMessageHandler {
     @Override
     public void handleServerMessage(ServerBaseMessage msg) {
 	if (handlers.size() == 0) {
-	    unconsumedMessages.addFirst(msg);
+	    unconsumedMessages.addLast(msg);
 	}
 	notifyHandlers(msg);
     }

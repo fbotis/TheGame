@@ -1,17 +1,24 @@
 package com.fb.transport;
 
+import java.io.UnsupportedEncodingException;
 import java.util.concurrent.atomic.AtomicLong;
 
 import org.apache.log4j.Logger;
 import org.eclipse.paho.client.mqttv3.MqttException;
+import org.eclipse.paho.client.mqttv3.MqttPersistenceException;
 import org.eclipse.paho.client.mqttv3.MqttSecurityException;
 
 import com.fb.messages.BaseMessage;
 import com.fb.messages.ClientBaseMessage;
 import com.fb.messages.MsgDeserializer;
 import com.fb.messages.ServerBaseMessage;
-import com.fb.messages.client.ClientDisconnected;
 
+/**
+ * Common class used to comunicate with mqtt
+ * 
+ * @author Flo
+ * 
+ */
 public class MessagesTransport implements IServerMessageSender, IClientMessageSender, ITransportListener {
     private static final Logger logger = Logger.getLogger(MessagesTransport.class);
 
@@ -21,29 +28,21 @@ public class MessagesTransport implements IServerMessageSender, IClientMessageSe
 
 	@Override
 	public void handleServerMessage(ServerBaseMessage message) {
-	    // TODO Auto-generated method stub
-
 	}
 
 	@Override
 	public void handleClientMessage(ClientBaseMessage message) {
-	    // TODO Auto-generated method stub
 
 	}
     };
     private AtomicLong queueCount = new AtomicLong();
 
-    
     public MessagesTransport(String clientId, String brokerUrl, String clientDisconnectedTopic,
-	    BaseMessage clientDisconnectedMessage, String[] subscribedTopics, IMessageHandler msgHandler) {
-	try {
-	    mqttTransport = new MqttTransport(clientId, brokerUrl, clientDisconnectedTopic, clientDisconnectedMessage,
-		    this, subscribedTopics);
-	    this.msgHandler = msgHandler;
-	} catch (MqttException e) {
-	    // TODO Auto-generated catch block
-	    e.printStackTrace();
-	}
+	    BaseMessage clientDisconnectedMessage, String[] subscribedTopics, IMessageHandler msgHandler)
+	    throws MqttException {
+	mqttTransport = new MqttTransport(clientId, brokerUrl, clientDisconnectedTopic, clientDisconnectedMessage,
+		this, subscribedTopics);
+	this.msgHandler = msgHandler;
     }
 
     public MessagesTransport(String clientId, String brokerUrl, String clientDisconnectedTopic,
@@ -52,8 +51,7 @@ public class MessagesTransport implements IServerMessageSender, IClientMessageSe
 	    mqttTransport = new MqttTransport(clientId, brokerUrl, clientDisconnectedTopic, clientDisconnectedMessage,
 		    this, subscribedTopics);
 	} catch (MqttException e) {
-	    // TODO Auto-generated catch block
-	    e.printStackTrace();
+	    throw new RuntimeException(e);
 	}
     }
 
@@ -68,20 +66,23 @@ public class MessagesTransport implements IServerMessageSender, IClientMessageSe
     }
 
     private void sendMessage(BaseMessage msg) {
-	for (String topic : msg.getTopics())
+	for (String topic : msg.getTopics()) {
 	    try {
 		mqttTransport.sendMessage(topic, msg.toString());
-		queueCount.incrementAndGet();
-	    } catch (Exception e) {
-		// TODO ???
+	    } catch (MqttPersistenceException e) {
+		logger.error(e);
+	    } catch (UnsupportedEncodingException e) {
+		logger.error(e);
+	    } catch (MqttException e) {
+		throw new RuntimeException(e);
 	    }
+	    queueCount.incrementAndGet();
+	}
     }
 
     @Override
-    public void connectionLost(Throwable arg0) {
-	// TODO Auto-generated method stub
-	arg0.printStackTrace();
-
+    public void connectionLost(Throwable ex) {
+	logger.error("CONNECTION LOST", ex);
     }
 
     @Override
@@ -91,8 +92,10 @@ public class MessagesTransport implements IServerMessageSender, IClientMessageSe
 	    BaseMessage msg = deserializer.fromJsonMsg(message);
 	    if (msg instanceof ClientBaseMessage) {
 		msgHandler.handleClientMessage((ClientBaseMessage) msg);
-	    } else {
+	    } else if (msg instanceof ServerBaseMessage) {
 		msgHandler.handleServerMessage((ServerBaseMessage) msg);
+	    } else {
+		logger.error("NON RECOGNIZED MSG: " + message);
 	    }
 	} catch (ClassNotFoundException e) {
 	    // TODO Auto-generated catch block
@@ -115,7 +118,6 @@ public class MessagesTransport implements IServerMessageSender, IClientMessageSe
     @Override
     public void subscribeToTopic(String topic) throws MqttSecurityException, MqttException {
 	mqttTransport.subscribeToTopic(topic);
-
     }
 
     @Override

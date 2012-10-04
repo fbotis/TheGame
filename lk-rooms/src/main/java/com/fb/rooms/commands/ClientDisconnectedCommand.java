@@ -15,7 +15,6 @@ public class ClientDisconnectedCommand extends Command<ClientDisconnected> {
     @Override
     public void doWork() throws Exception {
 	getRoomsManager().userDisconnected(getMessage());
-
     }
 
 }

@@ -2,6 +2,7 @@ package com.fb.game.commands;
 
 import com.fb.game.model.GameLogic;
 import com.fb.messages.client.gameactions.Answer;
+import com.fb.messages.server.gameactions.BeginChallenge;
 import com.fb.messages.server.gameactions.ChallengeResult;
 import com.fb.transport.IServerMessageSender;
 
@@ -17,7 +18,9 @@ public class AnswerCommand extends Command<Answer> {
 	ChallengeResult res = getGameLogic().handleAnswer(getMessage());
 	if (res != null) {
 	    sendServerMessage(res);
+	    sendServerMessage(new BeginChallenge(getMessage().getGameId(), getGameLogic().nextPlayer()));
 	}
+
     }
 
 }

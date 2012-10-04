@@ -2,17 +2,17 @@ package com.fb.android.views;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Map.Entry;
 
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 
 import com.fb.android.R;
+import com.fb.android.game.AndroidGameLogic;
 import com.fb.android.views.base.BaseActivity;
+import com.fb.messages.client.gameactions.Answer;
+import com.fb.messages.client.gameactions.ChallengePlayer;
 import com.fb.messages.client.gameactions.ChooseTerritory;
 import com.fb.messages.server.gameactions.BeginChallenge;
 import com.fb.messages.server.gameactions.BeginChooseTerritory;
@@ -21,20 +21,25 @@ import com.fb.messages.server.gameactions.PlayerChallenged;
 import com.fb.messages.server.gameactions.Question;
 import com.fb.messages.server.gameactions.TerritoryChosen;
 import com.fb.messages.server.general.Snapshot.Room;
+import com.fb.messages.server.room.GameStarted;
 
 public class GameView extends BaseActivity {
 
     public static final String ROOM_EXTRA_ID = "room";
 
-    private Map<Integer, Button> btns = new HashMap<Integer, Button>();
+    private final Map<Integer, Button> btns = new HashMap<Integer, Button>();
 
     private Room room;
 
+    private boolean challenged;
+
+    private AndroidGameLogic gameLogic;
+
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-	super.onCreate(savedInstanceState);
+    public synchronized void onCreate(Bundle savedInstanceState) {
 	setContentView(R.layout.game);
 	this.room = (Room) getIntent().getSerializableExtra(ROOM_EXTRA_ID);
+
 	btns.put(0, (Button) findViewById(R.id.game_map_btn0));
 	btns.put(1, (Button) findViewById(R.id.game_map_btn1));
 	btns.put(2, (Button) findViewById(R.id.game_map_btn2));
@@ -44,77 +49,106 @@ public class GameView extends BaseActivity {
 	btns.put(6, (Button) findViewById(R.id.game_map_btn6));
 	btns.put(7, (Button) findViewById(R.id.game_map_btn7));
 	btns.put(8, (Button) findViewById(R.id.game_map_btn8));
+	disableButtons();
+	super.onCreate(savedInstanceState);
 
-	for (final Entry<Integer, Button> btn : btns.entrySet()) {
-	    btn.getValue().addTextChangedListener(new TextWatcher() {
+    }
 
-		@Override
-		public void onTextChanged(CharSequence s, int start, int before, int count) {
+    @Override
+    public synchronized void handleBeginChooseTerritory(BeginChooseTerritory msg) {
+	if (msg.getNextPlayerId().equals(getClientId())) {
+	    int index = 0;
+	    for (Button btn : btns.values()) {
+		final String terrId = String.valueOf(index);
+		if (!gameLogic.getOwner(terrId).equals(getClientId())) {
+		    btn.setEnabled(true);
+		    btn.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+			    sendClientMessage(new ChooseTerritory(getClientId(), room.getRoomId(), terrId));
+			}
+		    });
 		}
-
-		@Override
-		public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-		    // TODO Auto-generated method stub
-
-		}
-
-		@Override
-		public void afterTextChanged(Editable txt) {
-		    if (!txt.toString().equals("Empty")) {
-			btn.getValue().setEnabled(false);
-		    }
-		}
-	    });
-
-	    btn.getValue().setOnClickListener(new OnClickListener() {
-
-		@Override
-		public void onClick(View v) {
-		    sendClientMessage(new ChooseTerritory(getClientId(), room.getRoomId(), btn.getKey().toString()));
-		}
-	    });
+		index++;
+	    }
 	}
     }
 
     @Override
-    public void handleBeginChooseTerritory(BeginChooseTerritory msg) {
-	// TODO Auto-generated method stub
-	super.handleBeginChooseTerritory(msg);
+    public synchronized void handleBeginChallenge(BeginChallenge msg) {
+	if (msg.getNextPlayerId().equals(getClientId())) {
+	    int index = 0;
+	    for (Button btn : btns.values()) {
+		final String terrId = String.valueOf(index);
+		if (!gameLogic.getOwner(terrId).equals(getClientId())) {
+		    btn.setEnabled(true);
+		    btn.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+			    sendClientMessage(new ChallengePlayer(getClientId(), room.getRoomId(), gameLogic
+				    .getOwner(terrId), terrId));
+			    challenged = true;
+			}
+		    });
+		}
+		index++;
+	    }
+	}
     }
 
     @Override
-    public void handleBeginChallenge(BeginChallenge msg) {
-	// TODO Auto-generated method stub
-	super.handleBeginChallenge(msg);
+    public synchronized void handleChallengeResult(ChallengeResult msg) {
+	gameLogic.assignTerritory(msg.getTerritoryId(), msg.getWinnerPlayerId());
+	btns.get(Integer.valueOf(msg.getTerritoryId())).setText(msg.getWinnerPlayerId().subSequence(1, 4));
     }
 
     @Override
-    public void handleChallengeResult(ChallengeResult msg) {
-	// TODO Auto-generated method stub
-	super.handleChallengeResult(msg);
-    }
-
-    @Override
-    public void handleEndGame(BeginChallenge msg) {
+    public synchronized void handleEndGame(BeginChallenge msg) {
 	// TODO Auto-generated method stub
 	super.handleEndGame(msg);
     }
 
     @Override
-    public void handlePlayerChallenged(PlayerChallenged msg) {
-	// TODO Auto-generated method stub
-	super.handlePlayerChallenged(msg);
+    public synchronized void handlePlayerChallenged(PlayerChallenged msg) {
+	if (msg.getChallengedPlayerId().equals(getClientId())) {
+	    this.challenged = true;
+	}
     }
 
     @Override
-    public void handleQuestion(Question msg) {
+    public synchronized void handleQuestion(Question msg) {
+	disableButtons();
 	// TODO Auto-generated method stub
-	super.handleQuestion(msg);
+	if (isChallenged()) {
+	    sendClientMessage(new Answer(getClientId(), room.getRoomId(), ""));
+	}
+	challenged = false;
+    }
+
+    private void disableButtons() {
+	for (Button btn : btns.values()) {
+	    btn.setEnabled(false);
+	}
+    }
+
+    private boolean isChallenged() {
+	return challenged;
     }
 
     @Override
-    public void handleTerritoryChosen(TerritoryChosen msg) {
-	btns.get(Integer.valueOf(msg.getTerritoryId())).setText(msg.getTerritoryUserId().subSequence(1, 3));
+    public synchronized void handleTerritoryChosen(TerritoryChosen msg) {
+	disableButtons();
+	gameLogic.assignTerritory(msg.getTerritoryId(), msg.getTerritoryUserId());
+	btns.get(Integer.valueOf(msg.getTerritoryId())).setText(msg.getTerritoryUserId().subSequence(1, 4));
+    }
+
+    @Override
+    public synchronized void handleGameStarted(GameStarted msg) {
+	String[] map = new String[msg.getMap().size()];
+	msg.getMap().toArray(map);
+	gameLogic = new AndroidGameLogic(room, map);
     }
 
 }

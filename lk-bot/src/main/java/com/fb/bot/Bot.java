@@ -8,27 +8,27 @@ import org.eclipse.paho.client.mqttv3.MqttSecurityException;
 import com.fb.bot.game.BotGameLogic;
 import com.fb.bot.rooms.RoomsMonitor;
 import com.fb.messages.ClientBaseMessage;
+import com.fb.messages.client.gameactions.Answer;
 import com.fb.messages.client.gameactions.ChallengePlayer;
 import com.fb.messages.client.gameactions.ChooseTerritory;
-import com.fb.messages.client.room.CreateGame;
 import com.fb.messages.client.room.JoinGame;
 import com.fb.messages.server.general.Snapshot.Room;
 import com.fb.transport.MessagesTransport;
 
 public class Bot {
-    private String botId;
-    private String botName;
+    private String clientId;
     private MessagesTransport msgTransport;
+
     private RoomsMonitor roomsMonitor;
+    // control vars
     private boolean joinSent;
     private boolean playing;
     private BotGameLogic crtGameLogic;
     private Room crtRoom;
     private boolean challenged;
 
-    public Bot(String botId, String botName, MessagesTransport msgTransport) {
-	this.botId = botId;
-	this.botName = botName;
+    public Bot(String clientId, MessagesTransport msgTransport) {
+	this.clientId = clientId;
 	this.msgTransport = msgTransport;
 	this.roomsMonitor = new RoomsMonitor(this);
     }
@@ -39,20 +39,6 @@ public class Bot {
 
     public void addRoom(Room room) {
 	roomsMonitor.addRoom(room);
-	if (room.getPlayers().contains(getClientId())) {
-	    // TODO remove this
-	    try {
-		crtRoom = room;
-		msgTransport.subscribeToTopic("S" + room.getRoomId());
-		playing = true;
-	    } catch (MqttSecurityException e) {
-		// TODO Auto-generated catch block
-		e.printStackTrace();
-	    } catch (MqttException e) {
-		// TODO Auto-generated catch block
-		e.printStackTrace();
-	    }
-	}
     }
 
     public void joinRoom(Room room) {
@@ -60,8 +46,7 @@ public class Bot {
 	this.crtRoom = room;
 	try {
 	    // TODO see how we can avoid this S+ thing
-	    if (!playing)
-		msgTransport.subscribeToTopic("S" + room.getRoomId());
+	    msgTransport.subscribeToTopic("S" + room.getRoomId());
 	} catch (MqttSecurityException e) {
 	    // TODO Auto-generated catch block
 	    e.printStackTrace();
@@ -81,7 +66,7 @@ public class Bot {
     }
 
     public String getClientId() {
-	return botId;
+	return clientId;
     }
 
     public void gameStarted(String gameId, List<String> map) {
@@ -122,7 +107,6 @@ public class Bot {
 	for (Room room : rooms) {
 	    roomsMonitor.addRoom(room);
 	}
-	msgTransport.sendClientMessage(new CreateGame(getClientId(), "The game"));
     }
 
     public void chooseTerritory() {
@@ -135,6 +119,7 @@ public class Bot {
 	String challengedPlayerId = crtGameLogic.getOwner(territoryId);
 	msgTransport.sendClientMessage(new ChallengePlayer(getClientId(), crtRoom.getRoomId(), challengedPlayerId,
 		territoryId));
+	challenged = true;
     }
 
     public void assignTerritory(String territoryId, String clientId) {
@@ -151,6 +136,9 @@ public class Bot {
     }
 
     public void answerQuestion(String question) {
+	if (isChallenged()) {
+	    sendMessage(new Answer(getClientId(), crtRoom.getRoomId(), "mock answer"));
+	}
 	challenged = false;
     }
 }

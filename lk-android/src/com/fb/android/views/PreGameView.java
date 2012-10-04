@@ -2,6 +2,7 @@ package com.fb.android.views;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -40,6 +41,12 @@ public class PreGameView extends BaseActivity {
 	    @Override
 	    public void onClick(View v) {
 		sendClientMessage(new StartGame(getClientId(), room.getRoomId()));
+		((LKApplication) getApplication()).subscribeToTopic("S" + room.getRoomId());
+		((LKApplication) getApplication()).removeMessageHandler(msgHandler);
+		Toast.makeText(getApplicationContext(), "The game was started!!!", Toast.LENGTH_LONG).show();
+		Intent intent = new Intent(getApplicationContext(), GameView.class);
+		intent.putExtra(GameView.ROOM_EXTRA_ID, room);
+		startActivity(intent);
 	    }
 	});
     }
@@ -68,14 +75,4 @@ public class PreGameView extends BaseActivity {
 	}
     }
 
-    @Override
-    public void handleGameStarted(GameStarted msg) {
-	if (msg.getGameId().equals(room.getRoomId())) {
-	    ((LKApplication) getApplication()).subscribeToTopic("S" + msg.getGameId());
-	    Toast.makeText(getApplicationContext(), "The game was started!!!", Toast.LENGTH_LONG).show();
-	    Intent intent = new Intent(getApplicationContext(), GameView.class);
-	    intent.putExtra(GameView.ROOM_EXTRA_ID, room);
-	    startActivity(intent);
-	}
-    }
 }

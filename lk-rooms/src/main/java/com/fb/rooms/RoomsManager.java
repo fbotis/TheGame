@@ -4,7 +4,6 @@ import java.util.Collections;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import com.fb.exceptions.room.DuplicateRoomException;
 import com.fb.exceptions.room.RoomNotFoundException;
 import com.fb.exceptions.room.UserAlreadyCreatedGameException;
 import com.fb.exceptions.room.UserAlreadyJoinedException;

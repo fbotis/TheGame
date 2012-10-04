@@ -29,7 +29,7 @@ public class BotService implements IMessageHandler {
 		clientId), DEFAULT_SUB_TOPICS);
 	msgTransport.setMsgHandler(this);
 	msgTransport.subscribeToTopic(clientId);
-	bot = new Bot(clientId, botName, msgTransport);
+	bot = new Bot(clientId, msgTransport);
 	cmdFact = new CommandFactory(bot);
 	bot.sendMessage(new GetSnapshot(bot.getClientId()));
     }
@@ -55,6 +55,6 @@ public class BotService implements IMessageHandler {
     }
 
     public static void main(String[] args) throws MqttSecurityException, MqttException {
-	BotService srv = new BotService("BOT" + new Random().nextDouble(), "tcp://192.168.1.101:1883", "name");
+	BotService srv = new BotService(new Random().nextDouble() + "Bot", "tcp://192.168.1.101:1883", "name");
     }
 }

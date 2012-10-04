@@ -15,7 +15,7 @@ public class RoomsMonitor implements Runnable {
 
     private static final int MIN_PLAYERS_FOR_BOT_JOIN = 5;
     // TODO make it config
-    private static Long JOIN_GAME_TIMEOUT = 3 * 1000l;
+    private static Long JOIN_GAME_TIMEOUT = 3 * 100l;
     private Map<String, Room> rooms = new ConcurrentHashMap<String, Snapshot.Room>();
     private Map<String, Long> roomsLastUpdate = new ConcurrentHashMap<String, Long>();
     private InProgressGameMonitor inprgMonitor;
