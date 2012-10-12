@@ -13,6 +13,7 @@ import com.fb.messages.ClientBaseMessage;
 import com.fb.messages.ServerBaseMessage;
 import com.fb.messages.client.ClientDisconnected;
 import com.fb.messages.client.general.GetSnapshot;
+import com.fb.messages.client.room.CreateGame;
 import com.fb.topics.Topic;
 import com.fb.transport.IMessageHandler;
 import com.fb.transport.MessagesTransport;
@@ -23,8 +24,10 @@ public class BotService implements IMessageHandler {
     private MessagesTransport msgTransport;
     private Bot bot;
     private CommandFactory cmdFact;
+    private String clientId;
 
     public BotService(String clientId, String brokerUrl, String botName) throws MqttSecurityException, MqttException {
+	this.clientId = clientId;
 	msgTransport = new MessagesTransport(clientId, brokerUrl, Topic.CLIENT_DISCONNECTED, new ClientDisconnected(
 		clientId), DEFAULT_SUB_TOPICS);
 	msgTransport.setMsgHandler(this);
@@ -55,6 +58,9 @@ public class BotService implements IMessageHandler {
     }
 
     public static void main(String[] args) throws MqttSecurityException, MqttException {
-	BotService srv = new BotService(new Random().nextDouble() + "Bot", "tcp://192.168.1.101:1883", "name");
+	String clientId = new Random().nextDouble() + "Bot";
+	BotService srv = new BotService(clientId, "tcp://192.168.1.101:1883", "name");
+	srv.msgTransport.sendClientMessage(new CreateGame(clientId, "test game"));
     }
+
 }

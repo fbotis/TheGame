@@ -40,6 +40,49 @@ public class Snapshot extends ServerBaseMessage {
 	    return creatorId;
 	}
 
+	@Override
+	public int hashCode() {
+	    final int prime = 31;
+	    int result = 1;
+	    result = prime * result + ((creatorId == null) ? 0 : creatorId.hashCode());
+	    result = prime * result + ((name == null) ? 0 : name.hashCode());
+	    result = prime * result + ((players == null) ? 0 : players.hashCode());
+	    result = prime * result + ((roomId == null) ? 0 : roomId.hashCode());
+	    return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+	    if (this == obj)
+		return true;
+	    if (obj == null)
+		return false;
+	    if (getClass() != obj.getClass())
+		return false;
+	    Room other = (Room) obj;
+	    if (creatorId == null) {
+		if (other.creatorId != null)
+		    return false;
+	    } else if (!creatorId.equals(other.creatorId))
+		return false;
+	    if (name == null) {
+		if (other.name != null)
+		    return false;
+	    } else if (!name.equals(other.name))
+		return false;
+	    if (players == null) {
+		if (other.players != null)
+		    return false;
+	    } else if (!players.equals(other.players))
+		return false;
+	    if (roomId == null) {
+		if (other.roomId != null)
+		    return false;
+	    } else if (!roomId.equals(other.roomId))
+		return false;
+	    return true;
+	}
+
     }
 
     private List<Room> rooms;

@@ -4,17 +4,12 @@
     android:layout_height="fill_parent"
     android:orientation="vertical" >
 
-    <Button
-        android:id="@+id/createRoomBtn"
+    <ListView
+        android:id="@+id/list"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:onClick="createRoom"
-        android:text="Create room" />
-
-    <ExpandableListView
-        android:id="@+id/rooms_list"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:drawSelectorOnTop="false" />
+        android:divider="#b5b5b5"
+        android:dividerHeight="1dp"
+        android:listSelector="@drawable/list_selector" />
 
 </LinearLayout>

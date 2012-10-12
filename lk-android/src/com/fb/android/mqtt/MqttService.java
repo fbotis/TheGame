@@ -10,6 +10,7 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Binder;
 import android.os.IBinder;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.fb.android.Config;
@@ -42,7 +43,10 @@ public class MqttService extends Service {
 
 	@Override
 	protected Boolean doInBackground(ClientBaseMessage... params) {
-	    // TODO fix this
+	    if (!mqttTransport.isConnected()) {
+		createTransport();
+	    }
+	    // TODO fix this (subscribe to user topic somewhere else)
 	    if (params.length > 0) {
 		try {
 		    mqttTransport.subscribeToTopic(params[0].getUserId());
@@ -60,7 +64,6 @@ public class MqttService extends Service {
 	    }
 	    return true;
 	}
-
     }
 
     final LocalBinder<MqttService> binder = new LocalBinder<MqttService>(this);
@@ -80,15 +83,19 @@ public class MqttService extends Service {
 
     @Override
     public void onCreate() {
-	// init all
-	String clientId = getClientId();
-
-	mqttTransport = new MessagesTransport(clientId, Config.INSTANCE.getMQTTBrokerURL(), Topic.CLIENT_DISCONNECTED,
-		new ClientDisconnected(clientId), new String[] { Topic.ALL_TOPIC, clientId });
+	// init transport
+	createTransport();
 	super.onCreate();
     }
 
+    private void createTransport() {
+	Log.d("MqttServoce", "Creating transport, connecting");
+	mqttTransport = new MessagesTransport(getClientId(), Config.INSTANCE.getMQTTBrokerURL(),
+		Topic.CLIENT_DISCONNECTED, new ClientDisconnected(clientId), new String[] { Topic.ALL_TOPIC, clientId });
+    }
+
     public String getClientId() {
+	//TODO change this with a real id
 	if (this.clientId == null) {
 	    this.clientId = "mobile" + System.currentTimeMillis();
 	}
@@ -105,23 +112,26 @@ public class MqttService extends Service {
     }
 
     public void subscribeToTopic(String topic) {
+	if (!mqttTransport.isConnected()) {
+	    createTransport();
+	}
 	try {
 	    mqttTransport.subscribeToTopic(topic);
 	} catch (MqttSecurityException e) {
-	    // TODO Auto-generated catch block
-	    e.printStackTrace();
+	    Log.e("MqttService", "Security error", e);
 	} catch (MqttException e) {
-	    // TODO Auto-generated catch block
-	    e.printStackTrace();
+	    Log.e("MqttService", "MQT exception", e);
 	}
     }
 
     public void unsubscribeFromTopic(String topic) {
+	if (!mqttTransport.isConnected()) {
+	    createTransport();
+	}
 	try {
 	    mqttTransport.unsubscribeFromTopic(topic);
 	} catch (MqttException e) {
-	    // TODO Auto-generated catch block
-	    e.printStackTrace();
+	    Log.e("MqttService", "MQT exception", e);
 	}
     }
 

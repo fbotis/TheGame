@@ -9,5 +9,7 @@ public interface IServerMessageSender {
     public void subscribeToTopic(String topic) throws Exception;
 
     public void unsubscribeFromTopic(String topic) throws Exception;
+    
+    public boolean isConnected();
 
 }

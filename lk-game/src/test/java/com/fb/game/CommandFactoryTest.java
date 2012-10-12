@@ -37,6 +37,12 @@ public class CommandFactoryTest {
 		// TODO Auto-generated method stub
 
 	    }
+
+	    @Override
+	    public boolean isConnected() {
+		// TODO Auto-generated method stub
+		return false;
+	    }
 	});
 
 	Assert.assertEquals(ChooseTerritoryCommand.class, fact.getCommand(new ChooseTerritory("", "", "")).getClass());

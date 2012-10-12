@@ -124,4 +124,9 @@ public class MessagesTransport implements IServerMessageSender, IClientMessageSe
     public void unsubscribeFromTopic(String topic) throws MqttException {
 	mqttTransport.unsuscribeFromTopic(topic);
     }
+
+    @Override
+    public boolean isConnected() {
+	return mqttTransport.isConnected();
+    }
 }

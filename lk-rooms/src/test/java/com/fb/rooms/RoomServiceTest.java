@@ -44,6 +44,12 @@ public class RoomServiceTest extends TestCase {
 	    // TODO Auto-generated method stub
 
 	}
+
+	@Override
+	public boolean isConnected() {
+	    // TODO Auto-generated method stub
+	    return false;
+	}
     };
 
     @Test
